@@ -59,17 +59,16 @@ jobs:
       - run: mvn org.apache.maven.plugins:maven-toolchains-plugin:3.2.0:display-discovered-jdk-toolchains
       - run: java --version
       - run: mvn --version
-      - run: mvn toolchains:select-jdk-toolchain -Dtoolchain.jdk.version="8" -q clean verify -B -DskipDocker -DskipNpm -DskipTests
-
-#      - name: Upload static files as artifact
-#        id: upload-docs-step
-#        uses: actions/upload-pages-artifact@v3 # or specific "vX.X.X" version tag for this action
-#        with:
-#          path: stack-docs/target/docs/apidocs/
-#      - run: echo "url ${{ steps.upload-docs-step.outputs.page_url }}"
-#      - name: Deploy to GitHub Pages
-#        id: deployment
-#        uses: actions/deploy-pages@v4
+      - run: mvn toolchains:select-jdk-toolchain -Dtoolchain.jdk.version="8" clean verify -B -DskipDocker -DskipNpm -DskipTests
+      - name: Upload static files as artifact
+        id: upload-docs-step
+        uses: actions/upload-pages-artifact@v3 # or specific "vX.X.X" version tag for this action
+        with:
+          path: stack-docs/target/docs/apidocs/
+      - run: echo "url ${{ steps.upload-docs-step.outputs.page_url }}"
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v4
 
 #  Deploy:
 #    name: Deploy to OSSRH
