@@ -14,7 +14,6 @@ on:
 #    - cron:  '0 4 * * *'
 jobs:
   Test:
-    needs: setup
     name: Run tests
     strategy:
       matrix:
