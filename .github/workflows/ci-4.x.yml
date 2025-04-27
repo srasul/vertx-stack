@@ -35,7 +35,7 @@ jobs:
         id: upload-docs-step
         uses: actions/upload-pages-artifact@v3 # or specific "vX.X.X" version tag for this action
         with:
-          path: stack-docs/target/docs/apidocs/${{ matrix.jdk }}
+          path: stack-docs/target/docs/apidocs/
 
   # Deployment job
 #  deploy:
