@@ -1718,6 +1718,9 @@
             <phase>process-resources</phase>
             <configuration>
               <source>8</source>
+              <jdkToolchain>
+                <version>21</version>
+              </jdkToolchain>
               <reportOutputDirectory>${project.build.directory}/docs/</reportOutputDirectory>
               <additionalparam>-Xdoclint:none</additionalparam>
               <sourcepath>${project.build.directory}/java</sourcepath>
