@@ -30,12 +30,9 @@ jobs:
           cache: maven
           java-version: ${{ matrix.jdk }}
       - name: Run tests
-        run: mvn -q clean verify -B -DskipDocker -DskipNpm -DskipTests
-#      - name: Upload static files as artifact
-#        id: upload-docs-step
-#        uses: actions/upload-pages-artifact@v3 # or specific "vX.X.X" version tag for this action
-#        with:
-#          path: stack-docs/target/docs/apidocs/
+#        run: mvn -q clean verify -B -DskipDocker -DskipNpm -DskipTests
+        run: mvn --version
+
 
   # Deployment job
   deploy:
@@ -56,17 +53,19 @@ jobs:
         with:
           distribution: adopt
           cache: maven
-          java-version: 8
-      - run: mvn clean verify -B -DskipDocker -DskipNpm -DskipTests
-      - name: Upload static files as artifact
-        id: upload-docs-step
-        uses: actions/upload-pages-artifact@v3 # or specific "vX.X.X" version tag for this action
-        with:
-          path: stack-docs/target/docs/apidocs/
-      - run: echo "url ${{ steps.upload-docs-step.outputs.page_url }}"
-      - name: Deploy to GitHub Pages
-        id: deployment
-        uses: actions/deploy-pages@v4
+          java-version: |
+            8
+            21
+      - run: mvn org.apache.maven.plugins:maven-toolchains-plugin:3.2.0:display-discovered-jdk-toolchains
+#      - name: Upload static files as artifact
+#        id: upload-docs-step
+#        uses: actions/upload-pages-artifact@v3 # or specific "vX.X.X" version tag for this action
+#        with:
+#          path: stack-docs/target/docs/apidocs/
+#      - run: echo "url ${{ steps.upload-docs-step.outputs.page_url }}"
+#      - name: Deploy to GitHub Pages
+#        id: deployment
+#        uses: actions/deploy-pages@v4
 
 #  Deploy:
 #    name: Deploy to OSSRH
