@@ -27,6 +27,7 @@ jobs:
         uses: actions/setup-java@v4
         with:
           distribution: adopt
+          cache: maven
           java-version: ${{ matrix.jdk }}
       - name: Run tests
         run: mvn -q clean verify -B -DskipDocker -DskipNpm -DskipTests
