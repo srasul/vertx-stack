@@ -57,6 +57,8 @@ jobs:
             8
             21
       - run: mvn org.apache.maven.plugins:maven-toolchains-plugin:3.2.0:display-discovered-jdk-toolchains
+      - run: java --version
+      - run: mvn --version
 #      - name: Upload static files as artifact
 #        id: upload-docs-step
 #        uses: actions/upload-pages-artifact@v3 # or specific "vX.X.X" version tag for this action
