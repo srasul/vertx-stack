@@ -1,15 +1,17 @@
 name: vertx-stack (4.x)
 on:
+  workflow_dispatch:
   push:
     branches:
-      - master
-      - '[0-9]+.[0-9x]+'
-  pull_request:
-    branches:
-      - master
-      - '[0-9]+.[0-9x]+'
-  schedule:
-    - cron:  '0 4 * * *'
+      - javadoc_search_field
+#      - master
+#      - '[0-9]+.[0-9x]+'
+#  pull_request:
+#    branches:
+#      - master
+#      - '[0-9]+.[0-9x]+'
+#  schedule:
+#    - cron:  '0 4 * * *'
 jobs:
   Test:
     name: Run tests
@@ -20,30 +22,50 @@ jobs:
     runs-on: ${{ matrix.os }}
     steps:
       - name: Checkout
-        uses: actions/checkout@v2
+        uses: actions/checkout@v4
       - name: Install JDK
-        uses: joschi/setup-jdk@v2
+        uses: actions/setup-java@v4
         with:
           java-version: ${{ matrix.jdk }}
       - name: Run tests
-        run: mvn -q clean verify -B -DskipDocker -DskipNpm
-  Deploy:
-    name: Deploy to OSSRH
-    if: ${{ github.repository_owner == 'vert-x3' && (github.event_name == 'push' || github.event_name == 'schedule') }}
-    needs: Test
+        run: mvn -q clean verify -B -DskipDocker -DskipNpm -DskipTests
+  upload-docs:
     runs-on: ubuntu-latest
-    env:
-      VERTX_NEXUS_USERNAME: ${{ secrets.VERTX_NEXUS_USERNAME }}
-      VERTX_NEXUS_PASSWORD: ${{ secrets.VERTX_NEXUS_PASSWORD }}
     steps:
-      - name: Checkout
-        uses: actions/checkout@v2
-      - name: Install JDK
-        uses: joschi/setup-jdk@v2
+      - name: Upload static files as artifact
+        id: deployment
+        uses: actions/upload-pages-artifact@v3 # or specific "vX.X.X" version tag for this action
         with:
-          java-version: 8
-      - name: Get project version
-        run: echo "PROJECT_VERSION=$(mvn org.apache.maven.plugins:maven-help-plugin:evaluate -Dexpression=project.version -B | grep -v '\[')" >> $GITHUB_ENV
-      - name: Maven deploy
-        if: ${{ endsWith(env.PROJECT_VERSION, '-SNAPSHOT') }}
-        run: mvn deploy -s .github/maven-cd-settings.xml -DskipTests  -DskipDocker -DskipNpm -B
+          path: stack-docs/target/docs/apidocs/
+  # Deployment job
+  deploy:
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    runs-on: ubuntu-latest
+    needs: build
+    steps:
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v4
+
+#  Deploy:
+#    name: Deploy to OSSRH
+#    if: ${{ github.repository_owner == 'vert-x3' && (github.event_name == 'push' || github.event_name == 'schedule') }}
+#    needs: Test
+#    runs-on: ubuntu-latest
+#    env:
+#      VERTX_NEXUS_USERNAME: ${{ secrets.VERTX_NEXUS_USERNAME }}
+#      VERTX_NEXUS_PASSWORD: ${{ secrets.VERTX_NEXUS_PASSWORD }}
+#    steps:
+#      - name: Checkout
+#        uses: actions/checkout@v2
+#      - name: Install JDK
+#        uses: joschi/setup-jdk@v2
+#        with:
+#          java-version: 8
+#      - name: Get project version
+#        run: echo "PROJECT_VERSION=$(mvn org.apache.maven.plugins:maven-help-plugin:evaluate -Dexpression=project.version -B | grep -v '\[')" >> $GITHUB_ENV
+#      - name: Maven deploy
+#        if: ${{ endsWith(env.PROJECT_VERSION, '-SNAPSHOT') }}
+#        run: mvn deploy -s .github/maven-cd-settings.xml -DskipTests  -DskipDocker -DskipNpm -B
