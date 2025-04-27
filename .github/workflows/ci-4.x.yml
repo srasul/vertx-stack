@@ -31,26 +31,23 @@ jobs:
           java-version: ${{ matrix.jdk }}
       - name: Run tests
         run: mvn -q clean verify -B -DskipDocker -DskipNpm -DskipTests
-  upload-docs:
-    needs: Test
-    runs-on: ubuntu-latest
-    steps:
       - name: Upload static files as artifact
         id: upload-docs-step
         uses: actions/upload-pages-artifact@v3 # or specific "vX.X.X" version tag for this action
         with:
-          path: stack-docs/target/docs/apidocs/
+          path: stack-docs/target/docs/apidocs/${{ matrix.jdk }}
+
   # Deployment job
-  deploy:
-    environment:
-      name: github-pages
-      url: ${{ steps.upload-docs-step.outputs.page_url }}
-    runs-on: ubuntu-latest
-    needs: upload-docs
-    steps:
-      - name: Deploy to GitHub Pages
-        id: deployment
-        uses: actions/deploy-pages@v4
+#  deploy:
+#    environment:
+#      name: github-pages
+#      url: ${{ steps.upload-docs-step.outputs.page_url }}
+#    runs-on: ubuntu-latest
+#    needs: upload-docs
+#    steps:
+#      - name: Deploy to GitHub Pages
+#        id: deployment
+#        uses: actions/deploy-pages@v4
 
 #  Deploy:
 #    name: Deploy to OSSRH
