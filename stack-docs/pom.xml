@@ -1721,12 +1721,13 @@
               <jdkToolchain>
                 <version>21</version>
               </jdkToolchain>
-              <reportOutputDirectory>${project.build.directory}/docs/</reportOutputDirectory>
-              <additionalparam>-Xdoclint:none</additionalparam>
+              <outputDirectory>${project.build.directory}/docs/</outputDirectory>
+              <doclint>none</doclint>
               <sourcepath>${project.build.directory}/java</sourcepath>
               <detectLinks/>
               <detectJavaApiLink/>
-              <quiet>true</quiet>
+              <quiet>false</quiet>
+              <verbose>true</verbose>
               <links>
                 <link>https://docs.hazelcast.org/docs/3.5/javadoc/</link>
                 <link>https://reactivex.io/RxJava/1.x/javadoc/</link>
