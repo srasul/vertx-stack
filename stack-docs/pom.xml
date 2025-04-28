@@ -1719,7 +1719,7 @@
             <configuration>
               <source>8</source>
               <jdkToolchain>
-                <version>21</version>
+                <version>21.0.7</version>
               </jdkToolchain>
               <outputDirectory>${project.build.directory}/docs/</outputDirectory>
               <doclint>none</doclint>
